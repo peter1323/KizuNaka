@@ -1,4 +1,13 @@
-# 絆 KizuNaka
+<p align="center">
+  <img src="www/icons/icon-512.png" alt="Icono de KizuNaka" width="140">
+</p>
+
+<h1 align="center">KizuNaka</h1>
+
+<p align="center">
+  <b>絆 (kizuna) + 仲間 (nakama)</b> · el vínculo entre compañeros<br>
+  Creado por <a href="https://github.com/peter1323">peter1323</a>
+</p>
 
 App web (PWA) para fans del anime y el manga. Funciona en el móvil y en el PC, y se puede instalar como una app.
 
@@ -108,3 +117,9 @@ El instalador aparece en `src-tauri/target/release/bundle/`.
 
 - Datos de anime y manga: [AniList](https://anilist.co) (API GraphQL).
 - Búsqueda por imagen: [trace.moe](https://trace.moe).
+
+## Autor y licencia
+
+KizuNaka es un proyecto creado por **[peter1323](https://github.com/peter1323)**, su único autor.
+
+© 2026 peter1323. Todos los derechos reservados. Puedes ver el código y usar la app, pero para modificarla, redistribuirla o publicarla hace falta pedir permiso al autor. Consulta el archivo [LICENSE](LICENSE).

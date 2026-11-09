@@ -48,7 +48,18 @@ export class CapturaView {
       this.resultados.innerHTML = htmlError('No se ha encontrado ningún anime.');
       return;
     }
-    this.resultados.innerHTML = lista
+    // Si ninguno es fiable, explica las causas más probables
+    const aviso = lista.some((r) => r.fiable) ? '' : `
+      <div class="tarjeta aviso-dudoso">
+        <p><b>⚠️ No lo he encontrado con seguridad.</b> Puede ser porque:</p>
+        <ul>
+          <li>Es de un episodio o especial muy reciente que trace.moe aún no ha añadido.</li>
+          <li>Es una portada, fan art o imagen promocional, no una escena de un episodio.</li>
+          <li>La imagen está recortada, editada o muy comprimida.</li>
+        </ul>
+        <p class="pequeno">Compara la vista previa con tu imagen: a veces el primer resultado acierta igualmente.</p>
+      </div>`;
+    this.resultados.innerHTML = aviso + lista
       .map((r) => `<article class="tarjeta resultado">
         <img src="${esc(r.imagen)}" alt="Escena de ${esc(r.titulo)}" loading="lazy">
         <div class="resultado-info">

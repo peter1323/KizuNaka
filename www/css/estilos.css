@@ -427,6 +427,10 @@ main {
 .similitud { font-weight: 800; }
 .similitud.fiable { color: var(--verde); }
 .similitud.dudosa { color: var(--naranja); }
+.aviso-dudoso { border-color: var(--naranja); }
+.aviso-dudoso p { margin: 0 0 6px; }
+.aviso-dudoso ul { margin: 0 0 8px; padding-left: 20px; color: var(--texto-suave); }
+
 .etiqueta-dudosa {
   margin-left: 6px;
   padding: 2px 8px;

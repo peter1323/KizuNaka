@@ -1,5 +1,5 @@
 // Service worker: guarda la app en caché para que abra rápido y sin conexión
-const CACHE = 'kizunaka-v4';
+const CACHE = 'kizunaka-v5';
 
 const ARCHIVOS = [
   './',

@@ -44,19 +44,22 @@ export async function obtenerAnimesPopulares(pagina) {
   return data.Page.media;
 }
 
-// Búsqueda de mangas con filtros (las variables a null se ignoran)
-const QUERY_MANGAS = `
-query ($pais: CountryCode, $genero: String, $generosFuera: [String], $estado: MediaStatus,
-       $capMas: Int, $capMenos: Int, $orden: [MediaSort], $popMenos: Int) {
+// Búsqueda de mangas o animes con filtros (las variables que no se envían se ignoran)
+const QUERY_RECOMENDACIONES = `
+query ($medio: MediaType, $pais: CountryCode, $genero: String, $generosFuera: [String],
+       $estado: MediaStatus, $capMas: Int, $capMenos: Int, $epMas: Int, $epMenos: Int,
+       $orden: [MediaSort], $popMenos: Int) {
   Page(page: 1, perPage: 30) {
-    media(type: MANGA, isAdult: false, countryOfOrigin: $pais, genre: $genero,
+    media(type: $medio, isAdult: false, countryOfOrigin: $pais, genre: $genero,
           genre_not_in: $generosFuera, status: $estado, chapters_greater: $capMas,
-          chapters_lesser: $capMenos, sort: $orden, popularity_lesser: $popMenos) {
+          chapters_lesser: $capMenos, episodes_greater: $epMas, episodes_lesser: $epMenos,
+          format_not_in: [MUSIC], sort: $orden, popularity_lesser: $popMenos) {
       id
       title { romaji english }
       coverImage { large }
       averageScore
       chapters
+      episodes
       genres
       description
       siteUrl
@@ -64,7 +67,7 @@ query ($pais: CountryCode, $genero: String, $generosFuera: [String], $estado: Me
   }
 }`;
 
-export async function buscarMangas(filtros) {
-  const data = await consultar(QUERY_MANGAS, filtros);
+export async function buscarRecomendaciones(filtros) {
+  const data = await consultar(QUERY_RECOMENDACIONES, filtros);
   return data.Page.media;
 }

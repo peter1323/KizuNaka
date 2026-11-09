@@ -179,6 +179,8 @@ main {
 .boton:hover { filter: brightness(1.1); }
 .boton:active { transform: scale(0.97); }
 
+.boton:disabled { opacity: 0.4; cursor: default; filter: none; transform: none; }
+
 .boton.secundario {
   background: transparent;
   color: var(--texto);
@@ -219,6 +221,59 @@ main {
 .aviso-emoji { font-size: 2.5rem; margin: 0; }
 
 /* ===== Juego ===== */
+.modos {
+  display: inline-flex;
+  gap: 4px;
+  margin: 8px 0 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--fondo-2);
+  border: 1px solid var(--borde);
+}
+.modo {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--texto-suave);
+  background: transparent;
+  cursor: pointer;
+}
+.modo.activo { color: #fff; background: linear-gradient(135deg, var(--rosa), var(--morado)); }
+
+/* Lista de niveles de práctica */
+.aleatorio { width: 100%; margin-bottom: 14px; }
+.rejilla-niveles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: 8px;
+}
+.nivel {
+  aspect-ratio: 1;
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  background: var(--tarjeta);
+  color: var(--texto);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.nivel:hover { border-color: var(--rosa); }
+.nivel.ganado { background: var(--verde); border-color: var(--verde); color: #fff; }
+.nivel.perdido { background: var(--rojo); border-color: var(--rojo); color: #fff; }
+
+.enlace {
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: 12px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--rosa);
+  cursor: pointer;
+}
+
 .buscador { position: relative; }
 
 .buscador input {

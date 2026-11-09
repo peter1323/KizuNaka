@@ -1,5 +1,5 @@
 // Conecta el modelo del juego con su vista
-import { JuegoModel, MAX_INTENTOS } from '../models/juegoModel.js';
+import { JuegoModel, MAX_INTENTOS, NIVELES_PRACTICA } from '../models/juegoModel.js';
 import { JuegoView } from '../views/juegoView.js';
 
 export class JuegoController {
@@ -17,21 +17,29 @@ export class JuegoController {
       this.vista.mostrarError(error.message, () => this.cargar());
       return;
     }
-    this.vista.mostrarJuego(
-      (texto) => this.vista.pintarSugerencias(this.modelo.buscar(texto)),
-      (id) => this.adivinar(id)
-    );
-    this.actualizar();
-  }
-
-  adivinar(id) {
-    this.modelo.adivinar(id);
+    const m = this.modelo;
+    // Cada acción cambia el modelo y vuelve a pintar
+    const yActualizar = (fn) => (...args) => { fn(...args); this.actualizar(); };
+    this.vista.mostrarJuego({
+      escribir: (texto) => this.vista.pintarSugerencias(m.buscar(texto)),
+      elegir: yActualizar((id) => m.adivinar(id)),
+      cambiarModo: yActualizar((modo) => m.cambiarModo(modo)),
+      jugarNivel: yActualizar((nivel) => m.jugarNivel(nivel)),
+      verNiveles: yActualizar(() => m.verNiveles()),
+      siguiente: yActualizar(() => m.siguienteNivel())
+    });
     this.actualizar();
   }
 
   actualizar() {
-    this.vista.pintarIntentos(this.modelo.comparaciones(), MAX_INTENTOS);
-    const estado = this.modelo.estado();
-    if (estado !== 'jugando') this.vista.pintarFinal(estado, this.modelo.secreto);
+    const m = this.modelo;
+    if (m.modo === 'practica' && m.nivel === null) {
+      this.vista.pintarNiveles(m.resultados, NIVELES_PRACTICA);
+      return;
+    }
+    this.vista.pintarPartida(m.modo, m.nivel, NIVELES_PRACTICA);
+    this.vista.pintarIntentos(m.comparaciones(), MAX_INTENTOS);
+    const estado = m.estado();
+    if (estado !== 'jugando') this.vista.pintarFinal(estado, m.secreto, m.modo === 'practica');
   }
 }

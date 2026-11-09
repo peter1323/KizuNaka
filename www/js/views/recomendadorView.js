@@ -9,7 +9,7 @@ export class RecomendadorView {
   // Una pregunta con sus botones
   mostrarPregunta(pregunta, numero, total, alResponder) {
     this.raiz.innerHTML = `
-      <h2 class="titulo-seccion">¿Qué leo ahora?</h2>
+      <h2 class="titulo-seccion">¿Qué leo o veo?</h2>
       <div class="progreso"><div style="width:${((numero - 1) / total) * 100}%"></div></div>
       <p class="subtitulo">Pregunta ${numero} de ${total}</p>
       <div class="tarjeta pregunta">
@@ -37,8 +37,9 @@ export class RecomendadorView {
     this.raiz.querySelector('[data-accion="reintentar"]').onclick = alReiniciar;
   }
 
-  // Una recomendación con sus dos botones
-  mostrarRecomendacion(manga, posicion, total, alOtra, alReiniciar) {
+  // Una recomendación con sus botones.
+  // acciones: { anterior, otra, reiniciar, traducir }
+  mostrarRecomendacion(manga, posicion, total, acciones) {
     this.raiz.innerHTML = `
       <h2 class="titulo-seccion">Te recomiendo…</h2>
       <p class="subtitulo">${posicion} de ${total}</p>
@@ -47,16 +48,33 @@ export class RecomendadorView {
         <div class="recomendacion-info">
           <h3><a href="${esc(manga.enlace)}" target="_blank" rel="noopener">${esc(manga.titulo)}</a></h3>
           ${manga.romaji !== manga.titulo ? `<p class="pequeno">${esc(manga.romaji)}</p>` : ''}
-          <p class="datos">⭐ ${esc(manga.nota)} · 📖 ${esc(manga.capitulos)} capítulos</p>
+          <p class="datos">⭐ ${esc(manga.nota)} · ${manga.unidad === 'episodios' ? '📺' : '📖'} ${esc(manga.cantidad)} ${manga.unidad}</p>
           <div class="chips">${manga.generos.map((g) => `<span class="chip">${esc(g)}</span>`).join('')}</div>
-          <p class="descripcion">${esc(manga.descripcion)}</p>
+          <p class="descripcion">${esc(manga.verTraduccion ? manga.traduccion : manga.descripcion)}</p>
+          <button class="enlace" data-accion="traducir">${manga.verTraduccion ? '🌐 Ver original' : '🌐 Traducir'}</button>
+          <span class="pequeno error-traduccion"></span>
         </div>
       </article>
       <div class="botones">
+        <button class="boton secundario" data-accion="anterior" ${posicion === 1 ? 'disabled' : ''}>← Anterior</button>
         <button class="boton" data-accion="otra">🔀 Otra recomendación</button>
         <button class="boton secundario" data-accion="reiniciar">↺ Empezar de nuevo</button>
       </div>`;
-    this.raiz.querySelector('[data-accion="otra"]').onclick = alOtra;
-    this.raiz.querySelector('[data-accion="reiniciar"]').onclick = alReiniciar;
+    for (const accion of ['anterior', 'otra', 'reiniciar', 'traducir']) {
+      this.raiz.querySelector(`[data-accion="${accion}"]`).onclick = acciones[accion];
+    }
+  }
+
+  mostrarTraduciendo() {
+    const boton = this.raiz.querySelector('[data-accion="traducir"]');
+    boton.disabled = true;
+    boton.textContent = '🌐 Traduciendo…';
+  }
+
+  mostrarErrorTraduccion(mensaje) {
+    const boton = this.raiz.querySelector('[data-accion="traducir"]');
+    boton.disabled = false;
+    boton.textContent = '🌐 Traducir';
+    this.raiz.querySelector('.error-traduccion').textContent = mensaje;
   }
 }

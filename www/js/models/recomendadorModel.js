@@ -1,16 +1,33 @@
-// Preguntas y lógica del recomendador "¿Qué leo ahora?"
-import { buscarMangas } from './anilist.js';
+// Preguntas y lógica del recomendador "¿Qué leo o veo?"
+import { buscarRecomendaciones } from './anilist.js';
+import { traducir } from './traductor.js';
 
+// Las opciones pueden depender del medio elegido (MANGA o ANIME)
 export const PREGUNTAS = [
   {
-    clave: 'tipo',
-    titulo: '¿Qué te apetece leer?',
+    clave: 'medio',
+    titulo: '¿Qué buscas?',
     opciones: [
-      { texto: '🇯🇵 Manga', valor: 'JP' },
-      { texto: '🇰🇷 Manhwa', valor: 'KR' },
-      { texto: '🇨🇳 Manhua', valor: 'CN' },
-      { texto: '🎲 Me da igual', valor: null }
+      { texto: '📚 Algo para leer', valor: 'MANGA' },
+      { texto: '📺 Algo para ver', valor: 'ANIME' }
     ]
+  },
+  {
+    clave: 'tipo',
+    titulo: '¿De dónde?',
+    opciones: {
+      MANGA: [
+        { texto: '🇯🇵 Manga', valor: 'JP' },
+        { texto: '🇰🇷 Manhwa', valor: 'KR' },
+        { texto: '🇨🇳 Manhua', valor: 'CN' },
+        { texto: '🎲 Me da igual', valor: null }
+      ],
+      ANIME: [
+        { texto: '🇯🇵 Anime japonés', valor: 'JP' },
+        { texto: '🇨🇳 Donghua (chino)', valor: 'CN' },
+        { texto: '🎲 Me da igual', valor: null }
+      ]
+    }
   },
   {
     clave: 'genero',
@@ -38,13 +55,22 @@ export const PREGUNTAS = [
   {
     clave: 'longitud',
     titulo: '¿Qué longitud?',
-    opciones: [
-      { texto: '📗 Corta (menos de 50 caps.)', valor: 'corta' },
-      { texto: '📘 Media (50 a 150 caps.)', valor: 'media' },
-      { texto: '📚 Larga (más de 150 caps.)', valor: 'larga' },
-      { texto: '🔄 Que siga saliendo', valor: 'saliendo' },
-      { texto: '🎲 Me da igual', valor: null }
-    ]
+    opciones: {
+      MANGA: [
+        { texto: '📗 Corta (menos de 50 caps.)', valor: 'corta' },
+        { texto: '📘 Media (50 a 150 caps.)', valor: 'media' },
+        { texto: '📚 Larga (más de 150 caps.)', valor: 'larga' },
+        { texto: '🔄 Que siga saliendo', valor: 'saliendo' },
+        { texto: '🎲 Me da igual', valor: null }
+      ],
+      ANIME: [
+        { texto: '📗 Corta (hasta 13 episodios)', valor: 'corta' },
+        { texto: '📘 Media (14 a 50 episodios)', valor: 'media' },
+        { texto: '📚 Larga (más de 50 episodios)', valor: 'larga' },
+        { texto: '🔄 Que siga en emisión', valor: 'saliendo' },
+        { texto: '🎲 Me da igual', valor: null }
+      ]
+    }
   },
   {
     clave: 'fama',
@@ -57,15 +83,27 @@ export const PREGUNTAS = [
 ];
 
 // Convierte las respuestas en variables para la consulta de AniList
+// (AniList NO ignora un país a null: busca títulos sin país, así que solo se añade si hay)
 export function crearFiltros(r) {
-  const f = { pais: r.tipo, genero: r.genero, orden: ['POPULARITY_DESC'] };
+  const f = { medio: r.medio, genero: r.genero, orden: ['POPULARITY_DESC'] };
+  if (r.tipo) f.pais = r.tipo;
 
   if (r.ambiente === 'ligero') f.generosFuera = ['Horror', 'Psychological', 'Thriller'];
   if (r.ambiente === 'oscuro') f.generosFuera = ['Comedy', 'Slice of Life'];
 
-  if (r.longitud === 'corta') Object.assign(f, { estado: 'FINISHED', capMenos: 50 });
-  if (r.longitud === 'media') Object.assign(f, { estado: 'FINISHED', capMas: 49, capMenos: 151 });
-  if (r.longitud === 'larga') Object.assign(f, { estado: 'FINISHED', capMas: 150 });
+  // Límites de longitud: capítulos para manga, episodios para anime
+  const anime = r.medio === 'ANIME';
+  const mas = anime ? 'epMas' : 'capMas';
+  const menos = anime ? 'epMenos' : 'capMenos';
+  const limites = anime
+    ? { corta: [null, 14], media: [13, 51], larga: [50, null] }
+    : { corta: [null, 50], media: [49, 151], larga: [150, null] };
+  if (limites[r.longitud]) {
+    const [desde, hasta] = limites[r.longitud];
+    f.estado = 'FINISHED';
+    if (desde) f[mas] = desde;
+    if (hasta) f[menos] = hasta;
+  }
   if (r.longitud === 'saliendo') f.estado = 'RELEASING';
 
   if (r.fama === 'joya') Object.assign(f, { orden: ['SCORE_DESC'], popMenos: 15000 });
@@ -107,8 +145,11 @@ export class RecomendadorModel {
     this.indice = 0;
   }
 
+  // Devuelve la pregunta con las opciones del medio elegido
   preguntaActual() {
-    return PREGUNTAS[this.paso];
+    const p = PREGUNTAS[this.paso];
+    const opciones = Array.isArray(p.opciones) ? p.opciones : p.opciones[this.respuestas.medio];
+    return { ...p, opciones };
   }
 
   // Guarda la respuesta y avanza; devuelve true si ya no quedan preguntas
@@ -119,14 +160,16 @@ export class RecomendadorModel {
   }
 
   async buscar() {
-    const mangas = await buscarMangas(crearFiltros(this.respuestas));
+    const lista = await buscarRecomendaciones(crearFiltros(this.respuestas));
+    const anime = this.respuestas.medio === 'ANIME';
     this.resultados = mezclar(
-      mangas.map((m) => ({
+      lista.map((m) => ({
         titulo: m.title.english || m.title.romaji,
         romaji: m.title.romaji || '',
         portada: m.coverImage.large,
         nota: m.averageScore ? (m.averageScore / 10).toFixed(1) : '?',
-        capitulos: m.chapters ?? '?',
+        cantidad: (anime ? m.episodes : m.chapters) ?? '?',
+        unidad: anime ? 'episodios' : 'capítulos',
         generos: m.genres || [],
         descripcion: limpiarDescripcion(m.description),
         enlace: m.siteUrl
@@ -142,5 +185,16 @@ export class RecomendadorModel {
   // Pasa a la siguiente (vuelve al principio al llegar al final)
   siguiente() {
     this.indice = (this.indice + 1) % this.resultados.length;
+  }
+
+  anterior() {
+    if (this.indice > 0) this.indice--;
+  }
+
+  // Alterna entre la sinopsis original y la traducida (se traduce solo la primera vez)
+  async alternarTraduccion() {
+    const actual = this.actual();
+    if (!actual.traduccion) actual.traduccion = await traducir(actual.descripcion);
+    actual.verTraduccion = !actual.verTraduccion;
   }
 }

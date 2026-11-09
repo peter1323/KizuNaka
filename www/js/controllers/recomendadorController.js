@@ -1,4 +1,4 @@
-// Conecta el recomendador con su vista
+// Conecta el recomendador (manga o anime) con su vista
 import { RecomendadorModel, PREGUNTAS } from '../models/recomendadorModel.js';
 import { RecomendadorView } from '../views/recomendadorView.js';
 
@@ -46,8 +46,25 @@ export class RecomendadorController {
       this.modelo.actual(),
       this.modelo.indice + 1,
       this.modelo.resultados.length,
-      () => { this.modelo.siguiente(); this.mostrarRecomendacion(); },
-      () => this.empezar()
+      {
+        anterior: () => { this.modelo.anterior(); this.mostrarRecomendacion(); },
+        otra: () => { this.modelo.siguiente(); this.mostrarRecomendacion(); },
+        reiniciar: () => this.empezar(),
+        traducir: () => this.traducir()
+      }
     );
+  }
+
+  async traducir() {
+    const indice = this.modelo.indice;
+    this.vista.mostrarTraduciendo();
+    try {
+      await this.modelo.alternarTraduccion();
+    } catch (error) {
+      this.vista.mostrarErrorTraduccion(error.message);
+      return;
+    }
+    // Solo repinta si el usuario sigue en la misma recomendación
+    if (this.modelo.indice === indice) this.mostrarRecomendacion();
   }
 }

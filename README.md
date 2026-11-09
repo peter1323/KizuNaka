@@ -13,6 +13,13 @@ App web (PWA) para fans del anime y el manga. Funciona en el móvil y en el PC, 
 
 Está hecha con HTML, CSS y JavaScript puro (módulos ES), sin frameworks ni herramientas de build.
 
+<p align="center">
+  <img src="capturas/adivina.jpg" alt="Adivina el anime" width="250">
+  <img src="capturas/captura.jpg" alt="Buscar por captura" width="250">
+  <img src="capturas/recomendador.jpg" alt="¿Qué leo o veo?" width="250">
+</p>
+<p align="center"><i>Adivina el anime · Buscar por captura · ¿Qué leo o veo?</i></p>
+
 ## Qué hace
 
 ### 🎮 Adivina el anime

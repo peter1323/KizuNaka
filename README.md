@@ -113,6 +113,16 @@ npx tauri build
 
 El instalador aparece en `src-tauri/target/release/bundle/`.
 
+## Futuras implementaciones
+
+Ahora mismo KizuNaka no necesita servidor: todo funciona en el navegador y el progreso se guarda en el propio dispositivo. Solo haría falta un backend para añadir cosas como:
+
+- **Cuentas de usuario** y sincronizar el progreso entre el móvil y el PC.
+- **Ranking global** del juego diario para competir con otros jugadores.
+- **Historial o favoritos en la nube.**
+
+Para eso no haría falta montar un servidor propio: se podría usar [Firebase](https://firebase.google.com) o [Supabase](https://supabase.com), que tienen plan gratuito y se conectan directamente desde JavaScript. Más adelante, el backend también podría hacerse a medida en PHP.
+
 ## Créditos de datos
 
 - Datos de anime y manga: [AniList](https://anilist.co) (API GraphQL).

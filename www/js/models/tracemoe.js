@@ -10,15 +10,18 @@ export function formatoMinuto(segundos) {
   return `${mm}:${ss}`;
 }
 
-// Envía la imagen y devuelve los 3 mejores resultados ya preparados
-export async function buscarPorImagen(archivo) {
+// Envía la imagen (archivo o dirección web) y devuelve los 3 mejores resultados ya preparados
+export async function buscarPorImagen(imagen) {
   let respuesta;
   try {
-    respuesta = await fetch(URL_API, {
-      method: 'POST',
-      headers: { 'Content-Type': archivo.type || 'image/jpeg' },
-      body: archivo
-    });
+    respuesta = typeof imagen === 'string'
+      // Con una URL, trace.moe descarga la imagen por su cuenta
+      ? await fetch(`${URL_API}&url=${encodeURIComponent(imagen)}`)
+      : await fetch(URL_API, {
+        method: 'POST',
+        headers: { 'Content-Type': imagen.type || 'image/jpeg' },
+        body: imagen
+      });
   } catch {
     throw new Error('No hay conexión con trace.moe.');
   }

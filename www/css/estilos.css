@@ -408,7 +408,9 @@ main {
   text-align: center;
   font-weight: 600;
 }
-.zona-imagen:hover { border-color: var(--rosa); }
+.zona-imagen:hover, .zona-imagen.arrastrando { border-color: var(--rosa); }
+.form-url { display: flex; gap: 8px; margin-top: 12px; }
+.form-url input { flex: 1; min-width: 0; }
 .vista-previa { max-height: 260px; border-radius: 10px; }
 
 .resultados { display: grid; gap: 12px; margin-top: 16px; }

@@ -6,7 +6,7 @@ export class CapturaView {
     this.raiz = raiz;
   }
 
-  // Estructura de la sección y evento al elegir imagen
+  // Estructura de la sección y eventos para elegir imagen (archivo, arrastrar o URL)
   mostrar(alElegirImagen) {
     this.raiz.innerHTML = `
       <h2 class="titulo-seccion">Buscar por captura</h2>
@@ -14,24 +14,61 @@ export class CapturaView {
       <label class="zona-imagen">
         <input type="file" accept="image/*" hidden>
         <img class="vista-previa" alt="" hidden>
-        <span class="zona-texto">📷 Toca para elegir una imagen</span>
+        <span class="zona-texto">📷 Toca para elegir una imagen o arrástrala aquí</span>
       </label>
+      <form class="buscador form-url">
+        <input type="url" placeholder="…o pega la URL de la imagen" required>
+        <button class="boton" type="submit">Buscar</button>
+      </form>
       <div class="resultados"></div>`;
 
-    this.input = this.raiz.querySelector('input');
+    this.input = this.raiz.querySelector('input[type="file"]');
     this.previa = this.raiz.querySelector('.vista-previa');
     this.resultados = this.raiz.querySelector('.resultados');
+    const zona = this.raiz.querySelector('.zona-imagen');
+    const form = this.raiz.querySelector('.form-url');
+
+    // Muestra la vista previa y lanza la búsqueda (archivo o URL)
+    const elegir = (imagen) => {
+      if (this.previa.src.startsWith('blob:')) URL.revokeObjectURL(this.previa.src);
+      this.previa.src = typeof imagen === 'string' ? imagen : URL.createObjectURL(imagen);
+      this.previa.hidden = false;
+      this.raiz.querySelector('.zona-texto').textContent = 'Toca o arrastra para elegir otra imagen';
+      alElegirImagen(imagen);
+    };
 
     this.input.addEventListener('change', () => {
       const archivo = this.input.files[0];
-      if (!archivo) return;
-      // Muestra la imagen elegida
-      if (this.previa.src) URL.revokeObjectURL(this.previa.src);
-      this.previa.src = URL.createObjectURL(archivo);
-      this.previa.hidden = false;
-      this.raiz.querySelector('.zona-texto').textContent = 'Toca para elegir otra imagen';
-      alElegirImagen(archivo);
+      if (archivo) elegir(archivo);
       this.input.value = '';
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      elegir(form.querySelector('input').value.trim());
+      form.reset();
+    });
+
+    // Arrastrar y soltar: un archivo del PC o una imagen desde otra web (Google, etc.)
+    zona.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zona.classList.add('arrastrando');
+    });
+    zona.addEventListener('dragleave', () => zona.classList.remove('arrastrando'));
+    zona.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      zona.classList.remove('arrastrando');
+      const datos = e.dataTransfer;
+      const archivo = [...datos.files].find((f) => f.type.startsWith('image/'));
+      if (archivo) return elegir(archivo);
+      // Desde una web llega el HTML de la imagen o su dirección
+      const html = datos.getData('text/html');
+      const src = html && new DOMParser().parseFromString(html, 'text/html').querySelector('img')?.src;
+      const url = src || datos.getData('text/uri-list').split('\n')[0].trim();
+      // Las miniaturas de Google a veces llegan incrustadas (data:), se pasan como archivo
+      if (url.startsWith('data:image/')) return elegir(await (await fetch(url)).blob());
+      if (/^https?:\/\//.test(url)) return elegir(url);
+      this.mostrarError('No he podido leer esa imagen. Prueba a guardarla y subirla, o pega su dirección.');
     });
   }
 

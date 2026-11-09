@@ -34,7 +34,7 @@ Juego diario al estilo Wordle. Cada día hay un anime secreto, el mismo para tod
 - ¿Te sabe a poco? En el modo **Práctica** hay 100 niveles: elige el que quieras de la lista (en verde los acertados, en rojo los fallados) o juega una **partida aleatoria**.
 
 ### 📸 Buscar por captura
-Sube una captura de un anime y, gracias a [trace.moe](https://trace.moe), verás los 3 resultados más parecidos con su episodio, el minuto exacto y el % de coincidencia. Si es menor del 87 %, se marca como «poco fiable».
+Sube una captura de un anime (o arrástrala desde otra web, o pega su URL) y, gracias a [trace.moe](https://trace.moe), verás los 3 resultados más parecidos con su episodio, el minuto exacto y el % de coincidencia. Si es menor del 87 %, se marca como «poco fiable».
 
 ### 📚 ¿Qué leo o veo?
 Elige si quieres algo para leer o para ver, responde 5 preguntas (tipo, género, ambiente, longitud y si quieres algo popular o una joya oculta) y te recomienda mangas, manhwas, manhuas o animes de AniList, uno a uno. Puedes avanzar o volver a la recomendación anterior, y traducir la sinopsis al español con el botón «🌐 Traducir».

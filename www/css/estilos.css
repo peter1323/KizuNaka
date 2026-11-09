@@ -430,6 +430,7 @@ main {
 .aviso-dudoso { border-color: var(--naranja); }
 .aviso-dudoso p { margin: 0 0 6px; }
 .aviso-dudoso ul { margin: 0 0 8px; padding-left: 20px; color: var(--texto-suave); }
+.boton-lens { display: inline-block; margin: 6px 0; text-decoration: none; }
 
 .etiqueta-dudosa {
   margin-left: 6px;

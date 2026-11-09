@@ -58,6 +58,8 @@ export class CapturaView {
           <li>La imagen está recortada, editada o muy comprimida.</li>
         </ul>
         <p class="pequeno">Compara la vista previa con tu imagen: a veces el primer resultado acierta igualmente.</p>
+        <a class="boton boton-lens" href="https://lens.google.com/" target="_blank" rel="noopener">🔍 Probar en Google Lens</a>
+        <p class="pequeno">Se abre en otra pestaña: sube allí la misma imagen. Va mejor con recortes, manga y fan art.</p>
       </div>`;
     this.resultados.innerHTML = aviso + lista
       .map((r) => `<article class="tarjeta resultado">

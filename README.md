@@ -130,6 +130,15 @@ Ahora mismo KizuNaka no necesita servidor: todo funciona en el navegador y el pr
 
 Para eso no haría falta montar un servidor propio: se podría usar [Firebase](https://firebase.google.com) o [Supabase](https://supabase.com), que tienen plan gratuito y se conectan directamente desde JavaScript. Más adelante, el backend también podría hacerse a medida en PHP.
 
+### Búsqueda de manga, fan art y recortes con SauceNAO
+
+trace.moe solo reconoce fotogramas completos de episodios de anime. [SauceNAO](https://saucenao.com) también reconoce páginas de manga, fan art y recortes, pero no se puede llamar directamente desde la web (bloquea las peticiones de otros dominios y necesita una clave de API que no debe quedar a la vista). La solución es un pequeño intermediario con un **Cloudflare Worker**: código JavaScript que se ejecuta gratis en los servidores de Cloudflare, guarda la clave en secreto y pasa las imágenes a SauceNAO.
+
+1. ✅ **Hecho:** cuando trace.moe no encuentra nada con seguridad, la app muestra un botón **«🔍 Probar en Google Lens»** como último recurso. El código del Worker ya está preparado en [`worker/saucenao.js`](worker/saucenao.js).
+2. ⬜ Crear una cuenta gratuita en [SauceNAO](https://saucenao.com) y copiar la clave de API (en el perfil, apartado «api»). Crear también una cuenta gratuita en [Cloudflare](https://dash.cloudflare.com).
+3. ⬜ En Cloudflare, ir a **Workers & Pages → Create → Worker**, pegar el código de `worker/saucenao.js` en el editor y desplegarlo. Después, en **Settings → Variables and Secrets**, añadir un secreto llamado `SAUCENAO_KEY` con la clave de SauceNAO.
+4. ⬜ Conectar la app al Worker: un modelo nuevo `js/models/saucenao.js` que envíe la imagen a la dirección del Worker (`https://<nombre>.<usuario>.workers.dev`), y mostrar sus resultados en Buscar por captura. Probarlo con una página de manga y con un recorte vertical.
+
 ## Créditos de datos
 
 - Datos de anime y manga: [AniList](https://anilist.co) (API GraphQL).

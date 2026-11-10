@@ -5,13 +5,13 @@ export const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sáb
 
 export const PAISES = [
   { valor: 'todos', texto: 'Todos' },
-  { valor: 'JP', texto: '🇯🇵 Japón' },
-  { valor: 'CN', texto: '🇨🇳 China' },
-  { valor: 'KR', texto: '🇰🇷 Corea' }
+  { valor: 'JP', texto: 'Japón' },
+  { valor: 'CN', texto: 'China' },
+  { valor: 'KR', texto: 'Corea' }
 ];
 
 // Etiqueta que se muestra en los animes que no son japoneses
-const ETIQUETA_PAIS = { CN: '🇨🇳 Donghua', KR: '🇰🇷 Coreano', TW: '🇹🇼 Taiwán' };
+const ETIQUETA_PAIS = { CN: 'Donghua', KR: 'Coreano', TW: 'Taiwán' };
 
 const QUERY_EMISIONES = `
 query ($pagina: Int, $desde: Int, $hasta: Int) {

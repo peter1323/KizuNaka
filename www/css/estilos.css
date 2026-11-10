@@ -533,10 +533,11 @@ main {
 }
 .emision:hover { border-color: var(--rosa); }
 .emision.emitido { opacity: 0.55; }
-.emision img { width: 70px; height: 100px; object-fit: cover; border-radius: 10px; }
+.emision > img { width: 70px; height: 100px; object-fit: cover; border-radius: 10px; }
 .emision h3 { margin: 2px 0 4px; font-size: 0.95rem; }
 .emision .datos { margin: 0 0 4px; color: var(--rosa); }
 .chip-estreno { background: var(--verde); border-color: var(--verde); color: #fff; }
+.bandera { display: inline-block; width: 18px; height: 12px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; object-fit: cover; }
 
 /* ===== Móvil ===== */
 @media (max-width: 560px) {

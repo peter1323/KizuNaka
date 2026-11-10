@@ -13,7 +13,7 @@ export class CalendarioView {
       <h2 class="titulo-seccion">Calendario</h2>
       <p class="subtitulo">Lo que se emite esta semana, con la hora de tu zona horaria.</p>
       <div class="modos filtro-pais">
-        ${PAISES.map((p, i) => `<button class="modo ${i === 0 ? 'activo' : ''}" data-pais="${p.valor}">${p.texto}</button>`).join('')}
+        ${PAISES.map((p, i) => `<button class="modo ${i === 0 ? 'activo' : ''}" data-pais="${p.valor}">${p.valor === 'todos' ? '' : bandera(p.valor)}${p.texto}</button>`).join('')}
       </div>
       <div class="dias"></div>`;
 
@@ -53,6 +53,11 @@ export class CalendarioView {
   }
 }
 
+// Bandera como imagen (Windows no dibuja los emojis de banderas)
+function bandera(codigo) {
+  return `<img class="bandera" src="https://flagcdn.com/w40/${esc(codigo.toLowerCase())}.png" alt="">`;
+}
+
 // Tarjeta de un episodio
 function htmlEmision(e) {
   return `<a class="tarjeta emision ${e.emitido ? 'emitido' : ''}" href="${esc(e.enlace)}" target="_blank" rel="noopener">
@@ -62,7 +67,7 @@ function htmlEmision(e) {
       <p class="datos">Ep. ${esc(e.episodio)} · ${esc(e.hora)}</p>
       <div>
         ${e.estreno ? '<span class="chip chip-estreno">🆕 Estreno</span>' : ''}
-        ${e.etiquetaPais ? `<span class="chip">${esc(e.etiquetaPais)}</span>` : ''}
+        ${e.etiquetaPais ? `<span class="chip">${bandera(e.pais)}${esc(e.etiquetaPais)}</span>` : ''}
         ${e.manhwa ? '<span class="chip">📖 Basado en manhwa</span>' : ''}
       </div>
     </div>

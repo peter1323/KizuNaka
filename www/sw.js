@@ -1,5 +1,5 @@
 // Service worker: guarda la app en caché para que abra rápido y sin conexión
-const CACHE = 'kizunaka-v7';
+const CACHE = 'kizunaka-v8';
 
 const ARCHIVOS = [
   './',
@@ -13,13 +13,16 @@ const ARCHIVOS = [
   './js/models/juegoModel.js',
   './js/models/recomendadorModel.js',
   './js/models/traductor.js',
+  './js/models/calendario.js',
   './js/views/html.js',
   './js/views/juegoView.js',
   './js/views/capturaView.js',
   './js/views/recomendadorView.js',
+  './js/views/calendarioView.js',
   './js/controllers/juegoController.js',
   './js/controllers/capturaController.js',
   './js/controllers/recomendadorController.js',
+  './js/controllers/calendarioController.js',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',

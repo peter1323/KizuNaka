@@ -499,6 +499,45 @@ main {
 }
 .botones .boton { flex: 1; min-width: 180px; }
 
+/* ===== Calendario ===== */
+.filtro-pais { display: flex; flex-wrap: wrap; border-radius: var(--radio); }
+.filtro-pais .modo { padding: 6px 12px; }
+.dias { display: grid; gap: 10px; margin-top: 12px; }
+.dia summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: var(--radio);
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.dia.hoy summary { color: #fff; background: linear-gradient(135deg, var(--rosa), var(--morado)); border: none; }
+.dia-cuenta { font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+.emisiones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+  padding: 10px 0 4px;
+}
+.emision {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+  padding: 8px;
+  color: var(--texto);
+  text-decoration: none;
+}
+.emision:hover { border-color: var(--rosa); }
+.emision.emitido { opacity: 0.55; }
+.emision img { width: 70px; height: 100px; object-fit: cover; border-radius: 10px; }
+.emision h3 { margin: 2px 0 4px; font-size: 0.95rem; }
+.emision .datos { margin: 0 0 4px; color: var(--rosa); }
+.chip-estreno { background: var(--verde); border-color: var(--verde); color: #fff; }
+
 /* ===== Móvil ===== */
 @media (max-width: 560px) {
   .pistas { grid-template-columns: repeat(2, 1fr); }
@@ -506,4 +545,5 @@ main {
   .recomendacion { grid-template-columns: 1fr; }
   .recomendacion-portada { width: 160px; margin: 0 auto; }
   .titulo-seccion { font-size: 1.35rem; }
+  .emisiones { grid-template-columns: 1fr; }
 }

@@ -2,13 +2,15 @@
 import { JuegoController } from './controllers/juegoController.js';
 import { CapturaController } from './controllers/capturaController.js';
 import { RecomendadorController } from './controllers/recomendadorController.js';
+import { CalendarioController } from './controllers/calendarioController.js';
 import { leer, guardar } from './models/almacen.js';
 
 // Cada ruta tiene su controlador (se crea la primera vez que se visita)
 const rutas = {
   juego: JuegoController,
   captura: CapturaController,
-  recomendador: RecomendadorController
+  recomendador: RecomendadorController,
+  calendario: CalendarioController
 };
 const controladores = {};
 

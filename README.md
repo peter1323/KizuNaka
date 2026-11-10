@@ -39,6 +39,9 @@ Sube una captura de un anime (o arrástrala desde otra web, o pega su URL) y, gr
 ### 📚 ¿Qué leo o veo?
 Elige si quieres algo para leer o para ver, responde 5 preguntas (tipo, género, ambiente, longitud y si quieres algo popular o una joya oculta) y te recomienda mangas, manhwas, manhuas o animes de AniList, uno a uno. Puedes avanzar o volver a la recomendación anterior, y traducir la sinopsis al español con el botón «🌐 Traducir».
 
+### 📅 Calendario
+Los animes que se emiten esta semana, de lunes a domingo, con la hora en tu zona horaria (datos de AniList). El día de hoy sale abierto y los demás se despliegan al tocarlos. Puedes filtrar por país (Japón, China o Corea), y cada tarjeta indica si es un estreno, si es un donghua o animación coreana y si está basado en un manhwa.
+
 ## Estructura (MVC)
 
 ```
@@ -141,7 +144,7 @@ trace.moe solo reconoce fotogramas completos de episodios de anime. [SauceNAO](h
 
 ## Créditos de datos
 
-- Datos de anime y manga: [AniList](https://anilist.co) (API GraphQL).
+- Datos de anime y manga, y calendario de emisiones: [AniList](https://anilist.co) (API GraphQL).
 - Búsqueda por imagen: [trace.moe](https://trace.moe).
 
 ## Autor y licencia

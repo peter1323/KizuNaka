@@ -2,7 +2,7 @@
 const URL_API = 'https://graphql.anilist.co';
 
 // Envía una consulta y devuelve "data" (o lanza un error)
-async function consultar(query, variables = {}) {
+export async function consultar(query, variables = {}) {
   let respuesta;
   try {
     respuesta = await fetch(URL_API, {
